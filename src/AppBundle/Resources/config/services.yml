@@ -1,0 +1,15 @@
+parameters:
+    legislation.acts_listing_url: 'https://www.riigiteataja.ee/lyhendid.html'
+services:
+    legislation.api:
+        class: AppBundle\Classes\api\ApiService
+        arguments: ["@logger", "@http.client"]
+    legislation.acts_listing_parser:
+        class: AppBundle\Classes\parser\ActsListingParser
+        arguments: ["@legislation.api", %legislation.acts_listing_url%]
+#    legislation.act_parser:
+#        class: AppBundle\Classes\parser\ActParser
+#        arguments: ["@legislation.api"]
+    legislation.acts_importer:
+        class: AppBundle\Classes\importer\ActsImporter
+        arguments: ["@legislation.acts_listing_parser"]
