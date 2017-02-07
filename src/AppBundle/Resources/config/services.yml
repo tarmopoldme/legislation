@@ -12,4 +12,6 @@ services:
 #        arguments: ["@legislation.api"]
     legislation.acts_importer:
         class: AppBundle\Classes\importer\ActsImporter
-        arguments: ["@legislation.acts_listing_parser"]
+        arguments: ["@legislation.acts_listing_parser", "@legislation.api"]
+    legislation.acts_reference_finder:
+        class: AppBundle\Classes\operations\ActsReferenceFinder

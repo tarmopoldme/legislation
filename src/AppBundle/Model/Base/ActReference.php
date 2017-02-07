@@ -83,6 +83,13 @@ abstract class ActReference implements ActiveRecordInterface
     protected $target_act_id;
 
     /**
+     * The value for the reference_count field.
+     *
+     * @var        int
+     */
+    protected $reference_count;
+
+    /**
      * @var        ChildAct
      */
     protected $aActRelatedBySourceActId;
@@ -356,6 +363,16 @@ abstract class ActReference implements ActiveRecordInterface
     }
 
     /**
+     * Get the [reference_count] column value.
+     *
+     * @return int
+     */
+    public function getReferenceCount()
+    {
+        return $this->reference_count;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v new value
@@ -424,6 +441,26 @@ abstract class ActReference implements ActiveRecordInterface
     } // setTargetActId()
 
     /**
+     * Set the value of [reference_count] column.
+     *
+     * @param int $v new value
+     * @return $this|\AppBundle\Model\ActReference The current object (for fluent API support)
+     */
+    public function setReferenceCount($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->reference_count !== $v) {
+            $this->reference_count = $v;
+            $this->modifiedColumns[ActReferenceTableMap::COL_REFERENCE_COUNT] = true;
+        }
+
+        return $this;
+    } // setReferenceCount()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -467,6 +504,9 @@ abstract class ActReference implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ActReferenceTableMap::translateFieldName('TargetActId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->target_act_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ActReferenceTableMap::translateFieldName('ReferenceCount', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->reference_count = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -475,7 +515,7 @@ abstract class ActReference implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = ActReferenceTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = ActReferenceTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\AppBundle\\Model\\ActReference'), 0, $e);
@@ -708,6 +748,9 @@ abstract class ActReference implements ActiveRecordInterface
         if ($this->isColumnModified(ActReferenceTableMap::COL_TARGET_ACT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'target_act_id';
         }
+        if ($this->isColumnModified(ActReferenceTableMap::COL_REFERENCE_COUNT)) {
+            $modifiedColumns[':p' . $index++]  = 'reference_count';
+        }
 
         $sql = sprintf(
             'INSERT INTO act_reference (%s) VALUES (%s)',
@@ -727,6 +770,9 @@ abstract class ActReference implements ActiveRecordInterface
                         break;
                     case 'target_act_id':
                         $stmt->bindValue($identifier, $this->target_act_id, PDO::PARAM_INT);
+                        break;
+                    case 'reference_count':
+                        $stmt->bindValue($identifier, $this->reference_count, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -799,6 +845,9 @@ abstract class ActReference implements ActiveRecordInterface
             case 2:
                 return $this->getTargetActId();
                 break;
+            case 3:
+                return $this->getReferenceCount();
+                break;
             default:
                 return null;
                 break;
@@ -832,6 +881,7 @@ abstract class ActReference implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getSourceActId(),
             $keys[2] => $this->getTargetActId(),
+            $keys[3] => $this->getReferenceCount(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -912,6 +962,9 @@ abstract class ActReference implements ActiveRecordInterface
             case 2:
                 $this->setTargetActId($value);
                 break;
+            case 3:
+                $this->setReferenceCount($value);
+                break;
         } // switch()
 
         return $this;
@@ -946,6 +999,9 @@ abstract class ActReference implements ActiveRecordInterface
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setTargetActId($arr[$keys[2]]);
+        }
+        if (array_key_exists($keys[3], $arr)) {
+            $this->setReferenceCount($arr[$keys[3]]);
         }
     }
 
@@ -996,6 +1052,9 @@ abstract class ActReference implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ActReferenceTableMap::COL_TARGET_ACT_ID)) {
             $criteria->add(ActReferenceTableMap::COL_TARGET_ACT_ID, $this->target_act_id);
+        }
+        if ($this->isColumnModified(ActReferenceTableMap::COL_REFERENCE_COUNT)) {
+            $criteria->add(ActReferenceTableMap::COL_REFERENCE_COUNT, $this->reference_count);
         }
 
         return $criteria;
@@ -1085,6 +1144,7 @@ abstract class ActReference implements ActiveRecordInterface
     {
         $copyObj->setSourceActId($this->getSourceActId());
         $copyObj->setTargetActId($this->getTargetActId());
+        $copyObj->setReferenceCount($this->getReferenceCount());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1231,6 +1291,7 @@ abstract class ActReference implements ActiveRecordInterface
         $this->id = null;
         $this->source_act_id = null;
         $this->target_act_id = null;
+        $this->reference_count = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();

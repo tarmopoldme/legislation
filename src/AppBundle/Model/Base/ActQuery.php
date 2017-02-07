@@ -24,6 +24,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildActQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildActQuery orderByAbbreviation($order = Criteria::ASC) Order by the abbreviation column
  * @method     ChildActQuery orderByText($order = Criteria::ASC) Order by the text column
+ * @method     ChildActQuery orderByXml($order = Criteria::ASC) Order by the xml column
  * @method     ChildActQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildActQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildActQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -32,6 +33,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildActQuery groupByName() Group by the name column
  * @method     ChildActQuery groupByAbbreviation() Group by the abbreviation column
  * @method     ChildActQuery groupByText() Group by the text column
+ * @method     ChildActQuery groupByXml() Group by the xml column
  * @method     ChildActQuery groupByUrl() Group by the url column
  * @method     ChildActQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildActQuery groupByUpdatedAt() Group by the updated_at column
@@ -73,6 +75,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAct findOneByName(string $name) Return the first ChildAct filtered by the name column
  * @method     ChildAct findOneByAbbreviation(string $abbreviation) Return the first ChildAct filtered by the abbreviation column
  * @method     ChildAct findOneByText(string $text) Return the first ChildAct filtered by the text column
+ * @method     ChildAct findOneByXml(string $xml) Return the first ChildAct filtered by the xml column
  * @method     ChildAct findOneByUrl(string $url) Return the first ChildAct filtered by the url column
  * @method     ChildAct findOneByCreatedAt(string $created_at) Return the first ChildAct filtered by the created_at column
  * @method     ChildAct findOneByUpdatedAt(string $updated_at) Return the first ChildAct filtered by the updated_at column *
@@ -84,6 +87,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAct requireOneByName(string $name) Return the first ChildAct filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByAbbreviation(string $abbreviation) Return the first ChildAct filtered by the abbreviation column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByText(string $text) Return the first ChildAct filtered by the text column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAct requireOneByXml(string $xml) Return the first ChildAct filtered by the xml column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByUrl(string $url) Return the first ChildAct filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByCreatedAt(string $created_at) Return the first ChildAct filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByUpdatedAt(string $updated_at) Return the first ChildAct filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -93,6 +97,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAct[]|ObjectCollection findByName(string $name) Return ChildAct objects filtered by the name column
  * @method     ChildAct[]|ObjectCollection findByAbbreviation(string $abbreviation) Return ChildAct objects filtered by the abbreviation column
  * @method     ChildAct[]|ObjectCollection findByText(string $text) Return ChildAct objects filtered by the text column
+ * @method     ChildAct[]|ObjectCollection findByXml(string $xml) Return ChildAct objects filtered by the xml column
  * @method     ChildAct[]|ObjectCollection findByUrl(string $url) Return ChildAct objects filtered by the url column
  * @method     ChildAct[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildAct objects filtered by the created_at column
  * @method     ChildAct[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildAct objects filtered by the updated_at column
@@ -194,7 +199,7 @@ abstract class ActQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, abbreviation, text, url, created_at, updated_at FROM act WHERE id = :p0';
+        $sql = 'SELECT id, name, abbreviation, text, xml, url, created_at, updated_at FROM act WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -398,6 +403,31 @@ abstract class ActQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ActTableMap::COL_TEXT, $text, $comparison);
+    }
+
+    /**
+     * Filter the query on the xml column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByXml('fooValue');   // WHERE xml = 'fooValue'
+     * $query->filterByXml('%fooValue%', Criteria::LIKE); // WHERE xml LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $xml The value to use as filter.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildActQuery The current query, for fluid interface
+     */
+    public function filterByXml($xml = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($xml)) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ActTableMap::COL_XML, $xml, $comparison);
     }
 
     /**

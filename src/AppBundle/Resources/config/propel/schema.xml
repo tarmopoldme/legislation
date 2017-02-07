@@ -7,6 +7,7 @@
         <column name="name" type="varchar" required="true" size="255" />
         <column name="abbreviation" type="varchar" required="true" size="10" />
         <column name="text" type="longvarchar" />
+        <column name="xml" type="longvarchar" />
         <column name="url" type="varchar" size="255" />
         <column name="created_at" type="timestamp" required="true" />
         <column name="updated_at" type="timestamp" />
@@ -26,6 +27,7 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="source_act_id" type="integer" required="true" />
         <column name="target_act_id" type="integer" required="true" />
+        <column name="reference_count" type="integer" required="true" />
 
         <foreign-key name="fk_act_reference_act1" foreignTable="act" onDelete="cascade" onUpdate="cascade">
             <reference local="source_act_id" foreign="id" />

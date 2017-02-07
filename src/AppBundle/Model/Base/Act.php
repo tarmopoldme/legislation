@@ -95,6 +95,13 @@ abstract class Act implements ActiveRecordInterface
     protected $text;
 
     /**
+     * The value for the xml field.
+     *
+     * @var        string
+     */
+    protected $xml;
+
+    /**
      * The value for the url field.
      *
      * @var        string
@@ -413,6 +420,16 @@ abstract class Act implements ActiveRecordInterface
     }
 
     /**
+     * Get the [xml] column value.
+     *
+     * @return string
+     */
+    public function getXml()
+    {
+        return $this->xml;
+    }
+
+    /**
      * Get the [url] column value.
      *
      * @return string
@@ -543,6 +560,26 @@ abstract class Act implements ActiveRecordInterface
     } // setText()
 
     /**
+     * Set the value of [xml] column.
+     *
+     * @param string $v new value
+     * @return $this|\AppBundle\Model\Act The current object (for fluent API support)
+     */
+    public function setXml($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->xml !== $v) {
+            $this->xml = $v;
+            $this->modifiedColumns[ActTableMap::COL_XML] = true;
+        }
+
+        return $this;
+    } // setXml()
+
+    /**
      * Set the value of [url] column.
      *
      * @param string $v new value
@@ -650,16 +687,19 @@ abstract class Act implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : ActTableMap::translateFieldName('Text', TableMap::TYPE_PHPNAME, $indexType)];
             $this->text = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ActTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : ActTableMap::translateFieldName('Xml', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->xml = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ActTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
             $this->url = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ActTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ActTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ActTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ActTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -672,7 +712,7 @@ abstract class Act implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 7; // 7 = ActTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = ActTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\AppBundle\\Model\\Act'), 0, $e);
@@ -931,6 +971,9 @@ abstract class Act implements ActiveRecordInterface
         if ($this->isColumnModified(ActTableMap::COL_TEXT)) {
             $modifiedColumns[':p' . $index++]  = 'text';
         }
+        if ($this->isColumnModified(ActTableMap::COL_XML)) {
+            $modifiedColumns[':p' . $index++]  = 'xml';
+        }
         if ($this->isColumnModified(ActTableMap::COL_URL)) {
             $modifiedColumns[':p' . $index++]  = 'url';
         }
@@ -962,6 +1005,9 @@ abstract class Act implements ActiveRecordInterface
                         break;
                     case 'text':
                         $stmt->bindValue($identifier, $this->text, PDO::PARAM_STR);
+                        break;
+                    case 'xml':
+                        $stmt->bindValue($identifier, $this->xml, PDO::PARAM_STR);
                         break;
                     case 'url':
                         $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
@@ -1047,12 +1093,15 @@ abstract class Act implements ActiveRecordInterface
                 return $this->getText();
                 break;
             case 4:
-                return $this->getUrl();
+                return $this->getXml();
                 break;
             case 5:
-                return $this->getCreatedAt();
+                return $this->getUrl();
                 break;
             case 6:
+                return $this->getCreatedAt();
+                break;
+            case 7:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1089,16 +1138,17 @@ abstract class Act implements ActiveRecordInterface
             $keys[1] => $this->getName(),
             $keys[2] => $this->getAbbreviation(),
             $keys[3] => $this->getText(),
-            $keys[4] => $this->getUrl(),
-            $keys[5] => $this->getCreatedAt(),
-            $keys[6] => $this->getUpdatedAt(),
+            $keys[4] => $this->getXml(),
+            $keys[5] => $this->getUrl(),
+            $keys[6] => $this->getCreatedAt(),
+            $keys[7] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[5]] instanceof \DateTime) {
-            $result[$keys[5]] = $result[$keys[5]]->format('c');
-        }
-
         if ($result[$keys[6]] instanceof \DateTime) {
             $result[$keys[6]] = $result[$keys[6]]->format('c');
+        }
+
+        if ($result[$keys[7]] instanceof \DateTime) {
+            $result[$keys[7]] = $result[$keys[7]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1184,12 +1234,15 @@ abstract class Act implements ActiveRecordInterface
                 $this->setText($value);
                 break;
             case 4:
-                $this->setUrl($value);
+                $this->setXml($value);
                 break;
             case 5:
-                $this->setCreatedAt($value);
+                $this->setUrl($value);
                 break;
             case 6:
+                $this->setCreatedAt($value);
+                break;
+            case 7:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1231,13 +1284,16 @@ abstract class Act implements ActiveRecordInterface
             $this->setText($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setUrl($arr[$keys[4]]);
+            $this->setXml($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedAt($arr[$keys[5]]);
+            $this->setUrl($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setUpdatedAt($arr[$keys[6]]);
+            $this->setCreatedAt($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setUpdatedAt($arr[$keys[7]]);
         }
     }
 
@@ -1291,6 +1347,9 @@ abstract class Act implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ActTableMap::COL_TEXT)) {
             $criteria->add(ActTableMap::COL_TEXT, $this->text);
+        }
+        if ($this->isColumnModified(ActTableMap::COL_XML)) {
+            $criteria->add(ActTableMap::COL_XML, $this->xml);
         }
         if ($this->isColumnModified(ActTableMap::COL_URL)) {
             $criteria->add(ActTableMap::COL_URL, $this->url);
@@ -1390,6 +1449,7 @@ abstract class Act implements ActiveRecordInterface
         $copyObj->setName($this->getName());
         $copyObj->setAbbreviation($this->getAbbreviation());
         $copyObj->setText($this->getText());
+        $copyObj->setXml($this->getXml());
         $copyObj->setUrl($this->getUrl());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -1921,6 +1981,7 @@ abstract class Act implements ActiveRecordInterface
         $this->name = null;
         $this->abbreviation = null;
         $this->text = null;
+        $this->xml = null;
         $this->url = null;
         $this->created_at = null;
         $this->updated_at = null;

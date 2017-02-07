@@ -23,10 +23,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildActReferenceQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildActReferenceQuery orderBySourceActId($order = Criteria::ASC) Order by the source_act_id column
  * @method     ChildActReferenceQuery orderByTargetActId($order = Criteria::ASC) Order by the target_act_id column
+ * @method     ChildActReferenceQuery orderByReferenceCount($order = Criteria::ASC) Order by the reference_count column
  *
  * @method     ChildActReferenceQuery groupById() Group by the id column
  * @method     ChildActReferenceQuery groupBySourceActId() Group by the source_act_id column
  * @method     ChildActReferenceQuery groupByTargetActId() Group by the target_act_id column
+ * @method     ChildActReferenceQuery groupByReferenceCount() Group by the reference_count column
  *
  * @method     ChildActReferenceQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildActReferenceQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -63,7 +65,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildActReference findOneById(int $id) Return the first ChildActReference filtered by the id column
  * @method     ChildActReference findOneBySourceActId(int $source_act_id) Return the first ChildActReference filtered by the source_act_id column
- * @method     ChildActReference findOneByTargetActId(int $target_act_id) Return the first ChildActReference filtered by the target_act_id column *
+ * @method     ChildActReference findOneByTargetActId(int $target_act_id) Return the first ChildActReference filtered by the target_act_id column
+ * @method     ChildActReference findOneByReferenceCount(int $reference_count) Return the first ChildActReference filtered by the reference_count column *
 
  * @method     ChildActReference requirePk($key, ConnectionInterface $con = null) Return the ChildActReference by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildActReference requireOne(ConnectionInterface $con = null) Return the first ChildActReference matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -71,11 +74,13 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildActReference requireOneById(int $id) Return the first ChildActReference filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildActReference requireOneBySourceActId(int $source_act_id) Return the first ChildActReference filtered by the source_act_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildActReference requireOneByTargetActId(int $target_act_id) Return the first ChildActReference filtered by the target_act_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildActReference requireOneByReferenceCount(int $reference_count) Return the first ChildActReference filtered by the reference_count column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildActReference[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildActReference objects based on current ModelCriteria
  * @method     ChildActReference[]|ObjectCollection findById(int $id) Return ChildActReference objects filtered by the id column
  * @method     ChildActReference[]|ObjectCollection findBySourceActId(int $source_act_id) Return ChildActReference objects filtered by the source_act_id column
  * @method     ChildActReference[]|ObjectCollection findByTargetActId(int $target_act_id) Return ChildActReference objects filtered by the target_act_id column
+ * @method     ChildActReference[]|ObjectCollection findByReferenceCount(int $reference_count) Return ChildActReference objects filtered by the reference_count column
  * @method     ChildActReference[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
@@ -174,7 +179,7 @@ abstract class ActReferenceQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, source_act_id, target_act_id FROM act_reference WHERE id = :p0';
+        $sql = 'SELECT id, source_act_id, target_act_id, reference_count FROM act_reference WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -389,6 +394,47 @@ abstract class ActReferenceQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ActReferenceTableMap::COL_TARGET_ACT_ID, $targetActId, $comparison);
+    }
+
+    /**
+     * Filter the query on the reference_count column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByReferenceCount(1234); // WHERE reference_count = 1234
+     * $query->filterByReferenceCount(array(12, 34)); // WHERE reference_count IN (12, 34)
+     * $query->filterByReferenceCount(array('min' => 12)); // WHERE reference_count > 12
+     * </code>
+     *
+     * @param     mixed $referenceCount The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildActReferenceQuery The current query, for fluid interface
+     */
+    public function filterByReferenceCount($referenceCount = null, $comparison = null)
+    {
+        if (is_array($referenceCount)) {
+            $useMinMax = false;
+            if (isset($referenceCount['min'])) {
+                $this->addUsingAlias(ActReferenceTableMap::COL_REFERENCE_COUNT, $referenceCount['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($referenceCount['max'])) {
+                $this->addUsingAlias(ActReferenceTableMap::COL_REFERENCE_COUNT, $referenceCount['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ActReferenceTableMap::COL_REFERENCE_COUNT, $referenceCount, $comparison);
     }
 
     /**

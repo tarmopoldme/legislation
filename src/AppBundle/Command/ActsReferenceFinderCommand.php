@@ -11,13 +11,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author <tarmo.poldme@brainart.ee>
  * @date 04.02.2017
  */
-class ActsImportCommand extends ContainerAwareCommand
+class ActsReferenceFinderCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('legislation:acts:import')
-            ->setDescription('Import Riigiteataja acts')
+            ->setName('legislation:acts:find-references')
+            ->setDescription('Find referenced for imported acts')
         ;
     }
 
@@ -27,10 +27,11 @@ class ActsImportCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Starting acts import');
-        $importer = $this->getContainer()->get('legislation.acts_importer');
-        $importer->purgeDatabase();
-        $importer->import();
-        $output->writeln('Acts import complete');
+        $output->writeln('Starting acts reference finding');
+        $referenceFinder = $this->getContainer()->get('legislation.acts_reference_finder');
+        $referenceFinder->purgeOldReferences();
+        $referenceFinder->find();
+        ;
+        $output->writeln('Acts reference finding is done');
     }
 }

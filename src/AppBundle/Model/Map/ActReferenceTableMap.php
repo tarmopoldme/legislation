@@ -59,7 +59,7 @@ class ActReferenceTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ActReferenceTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the id field
@@ -87,6 +87,11 @@ class ActReferenceTableMap extends TableMap
     const COL_TARGET_ACT_ID = 'act_reference.target_act_id';
 
     /**
+     * the column name for the reference_count field
+     */
+    const COL_REFERENCE_COUNT = 'act_reference.reference_count';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -98,11 +103,11 @@ class ActReferenceTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'SourceActId', 'TargetActId', ),
-        self::TYPE_CAMELNAME     => array('id', 'sourceActId', 'targetActId', ),
-        self::TYPE_COLNAME       => array(ActReferenceTableMap::COL_ID, ActReferenceTableMap::COL_SOURCE_ACT_ID, ActReferenceTableMap::COL_TARGET_ACT_ID, ),
-        self::TYPE_FIELDNAME     => array('id', 'source_act_id', 'target_act_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'SourceActId', 'TargetActId', 'ReferenceCount', ),
+        self::TYPE_CAMELNAME     => array('id', 'sourceActId', 'targetActId', 'referenceCount', ),
+        self::TYPE_COLNAME       => array(ActReferenceTableMap::COL_ID, ActReferenceTableMap::COL_SOURCE_ACT_ID, ActReferenceTableMap::COL_TARGET_ACT_ID, ActReferenceTableMap::COL_REFERENCE_COUNT, ),
+        self::TYPE_FIELDNAME     => array('id', 'source_act_id', 'target_act_id', 'reference_count', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -112,11 +117,11 @@ class ActReferenceTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'SourceActId' => 1, 'TargetActId' => 2, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'sourceActId' => 1, 'targetActId' => 2, ),
-        self::TYPE_COLNAME       => array(ActReferenceTableMap::COL_ID => 0, ActReferenceTableMap::COL_SOURCE_ACT_ID => 1, ActReferenceTableMap::COL_TARGET_ACT_ID => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'source_act_id' => 1, 'target_act_id' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'SourceActId' => 1, 'TargetActId' => 2, 'ReferenceCount' => 3, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'sourceActId' => 1, 'targetActId' => 2, 'referenceCount' => 3, ),
+        self::TYPE_COLNAME       => array(ActReferenceTableMap::COL_ID => 0, ActReferenceTableMap::COL_SOURCE_ACT_ID => 1, ActReferenceTableMap::COL_TARGET_ACT_ID => 2, ActReferenceTableMap::COL_REFERENCE_COUNT => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'source_act_id' => 1, 'target_act_id' => 2, 'reference_count' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,6 +144,7 @@ class ActReferenceTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('source_act_id', 'SourceActId', 'INTEGER', 'act', 'id', true, null, null);
         $this->addForeignKey('target_act_id', 'TargetActId', 'INTEGER', 'act', 'id', true, null, null);
+        $this->addColumn('reference_count', 'ReferenceCount', 'INTEGER', true, null, null);
     } // initialize()
 
     /**
@@ -306,10 +312,12 @@ class ActReferenceTableMap extends TableMap
             $criteria->addSelectColumn(ActReferenceTableMap::COL_ID);
             $criteria->addSelectColumn(ActReferenceTableMap::COL_SOURCE_ACT_ID);
             $criteria->addSelectColumn(ActReferenceTableMap::COL_TARGET_ACT_ID);
+            $criteria->addSelectColumn(ActReferenceTableMap::COL_REFERENCE_COUNT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.source_act_id');
             $criteria->addSelectColumn($alias . '.target_act_id');
+            $criteria->addSelectColumn($alias . '.reference_count');
         }
     }
 
