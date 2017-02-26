@@ -17,7 +17,7 @@ class ActsReferenceFinderCommand extends ContainerAwareCommand
     {
         $this
             ->setName('legislation:acts:find-references')
-            ->setDescription('Find referenced for imported acts')
+            ->setDescription('Find references for imported acts')
         ;
     }
 

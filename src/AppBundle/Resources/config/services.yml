@@ -7,11 +7,10 @@ services:
     legislation.acts_listing_parser:
         class: AppBundle\Classes\parser\ActsListingParser
         arguments: ["@legislation.api", %legislation.acts_listing_url%]
-#    legislation.act_parser:
-#        class: AppBundle\Classes\parser\ActParser
-#        arguments: ["@legislation.api"]
     legislation.acts_importer:
         class: AppBundle\Classes\importer\ActsImporter
         arguments: ["@legislation.acts_listing_parser", "@legislation.api"]
     legislation.acts_reference_finder:
         class: AppBundle\Classes\operations\ActsReferenceFinder
+    legislation.acts_conformity_analyzer:
+          class: AppBundle\Classes\operations\ActsConformityAnalyzer
