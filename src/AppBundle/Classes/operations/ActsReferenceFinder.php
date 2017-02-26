@@ -46,8 +46,6 @@ class ActsReferenceFinder
         foreach ($this->patterns as $targetActId => $pattern) {
             if ($act->getName() === $pattern) {
                 $pattern = 'käesolev seadus'; //TODO move to config
-                // skip searching same reference
-                continue;
             }
             $pattern = preg_quote($pattern, '/');
             $count = preg_match_all("/$pattern/i", $act->getText());
