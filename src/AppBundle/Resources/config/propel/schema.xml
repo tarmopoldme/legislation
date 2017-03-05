@@ -9,6 +9,7 @@
         <column name="text" type="longvarchar" />
         <column name="xml" type="longvarchar" />
         <column name="url" type="varchar" size="255" />
+        <column name="confirmity_weight" type="integer" required="false" />
         <column name="created_at" type="timestamp" required="true" />
         <column name="updated_at" type="timestamp" />
 

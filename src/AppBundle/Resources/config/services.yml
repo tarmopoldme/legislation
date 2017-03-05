@@ -12,5 +12,3 @@ services:
         arguments: ["@legislation.acts_listing_parser", "@legislation.api"]
     legislation.acts_reference_finder:
         class: AppBundle\Classes\operations\ActsReferenceFinder
-    legislation.acts_conformity_analyzer:
-          class: AppBundle\Classes\operations\ActsConformityAnalyzer

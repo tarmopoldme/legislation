@@ -79,3 +79,7 @@ propel:
                 dsn:                  pdo_mysql:host=%database_host%;dbname=%database_name%;charset=utf8
                 options:              {}
                 attributes:           {}
+monolog:
+    handlers:
+        console:
+            type: console

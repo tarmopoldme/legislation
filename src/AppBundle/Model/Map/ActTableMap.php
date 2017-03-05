@@ -59,7 +59,7 @@ class ActTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 9;
 
     /**
      * The number of lazy-loaded columns
@@ -69,7 +69,7 @@ class ActTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /**
      * the column name for the id field
@@ -102,6 +102,11 @@ class ActTableMap extends TableMap
     const COL_URL = 'act.url';
 
     /**
+     * the column name for the confirmity_weight field
+     */
+    const COL_CONFIRMITY_WEIGHT = 'act.confirmity_weight';
+
+    /**
      * the column name for the created_at field
      */
     const COL_CREATED_AT = 'act.created_at';
@@ -123,11 +128,11 @@ class ActTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Name', 'Abbreviation', 'Text', 'Xml', 'Url', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_CAMELNAME     => array('id', 'name', 'abbreviation', 'text', 'xml', 'url', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(ActTableMap::COL_ID, ActTableMap::COL_NAME, ActTableMap::COL_ABBREVIATION, ActTableMap::COL_TEXT, ActTableMap::COL_XML, ActTableMap::COL_URL, ActTableMap::COL_CREATED_AT, ActTableMap::COL_UPDATED_AT, ),
-        self::TYPE_FIELDNAME     => array('id', 'name', 'abbreviation', 'text', 'xml', 'url', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id', 'Name', 'Abbreviation', 'Text', 'Xml', 'Url', 'ConfirmityWeight', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_CAMELNAME     => array('id', 'name', 'abbreviation', 'text', 'xml', 'url', 'confirmityWeight', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(ActTableMap::COL_ID, ActTableMap::COL_NAME, ActTableMap::COL_ABBREVIATION, ActTableMap::COL_TEXT, ActTableMap::COL_XML, ActTableMap::COL_URL, ActTableMap::COL_CONFIRMITY_WEIGHT, ActTableMap::COL_CREATED_AT, ActTableMap::COL_UPDATED_AT, ),
+        self::TYPE_FIELDNAME     => array('id', 'name', 'abbreviation', 'text', 'xml', 'url', 'confirmity_weight', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -137,11 +142,11 @@ class ActTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Abbreviation' => 2, 'Text' => 3, 'Xml' => 4, 'Url' => 5, 'CreatedAt' => 6, 'UpdatedAt' => 7, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'abbreviation' => 2, 'text' => 3, 'xml' => 4, 'url' => 5, 'createdAt' => 6, 'updatedAt' => 7, ),
-        self::TYPE_COLNAME       => array(ActTableMap::COL_ID => 0, ActTableMap::COL_NAME => 1, ActTableMap::COL_ABBREVIATION => 2, ActTableMap::COL_TEXT => 3, ActTableMap::COL_XML => 4, ActTableMap::COL_URL => 5, ActTableMap::COL_CREATED_AT => 6, ActTableMap::COL_UPDATED_AT => 7, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'abbreviation' => 2, 'text' => 3, 'xml' => 4, 'url' => 5, 'created_at' => 6, 'updated_at' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Name' => 1, 'Abbreviation' => 2, 'Text' => 3, 'Xml' => 4, 'Url' => 5, 'ConfirmityWeight' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, ),
+        self::TYPE_CAMELNAME     => array('id' => 0, 'name' => 1, 'abbreviation' => 2, 'text' => 3, 'xml' => 4, 'url' => 5, 'confirmityWeight' => 6, 'createdAt' => 7, 'updatedAt' => 8, ),
+        self::TYPE_COLNAME       => array(ActTableMap::COL_ID => 0, ActTableMap::COL_NAME => 1, ActTableMap::COL_ABBREVIATION => 2, ActTableMap::COL_TEXT => 3, ActTableMap::COL_XML => 4, ActTableMap::COL_URL => 5, ActTableMap::COL_CONFIRMITY_WEIGHT => 6, ActTableMap::COL_CREATED_AT => 7, ActTableMap::COL_UPDATED_AT => 8, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'name' => 1, 'abbreviation' => 2, 'text' => 3, 'xml' => 4, 'url' => 5, 'confirmity_weight' => 6, 'created_at' => 7, 'updated_at' => 8, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -167,6 +172,7 @@ class ActTableMap extends TableMap
         $this->addColumn('text', 'Text', 'LONGVARCHAR', false, null, null);
         $this->addColumn('xml', 'Xml', 'LONGVARCHAR', false, null, null);
         $this->addColumn('url', 'Url', 'VARCHAR', false, 255, null);
+        $this->addColumn('confirmity_weight', 'ConfirmityWeight', 'INTEGER', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', true, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -361,6 +367,7 @@ class ActTableMap extends TableMap
             $criteria->addSelectColumn(ActTableMap::COL_TEXT);
             $criteria->addSelectColumn(ActTableMap::COL_XML);
             $criteria->addSelectColumn(ActTableMap::COL_URL);
+            $criteria->addSelectColumn(ActTableMap::COL_CONFIRMITY_WEIGHT);
             $criteria->addSelectColumn(ActTableMap::COL_CREATED_AT);
             $criteria->addSelectColumn(ActTableMap::COL_UPDATED_AT);
         } else {
@@ -370,6 +377,7 @@ class ActTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.text');
             $criteria->addSelectColumn($alias . '.xml');
             $criteria->addSelectColumn($alias . '.url');
+            $criteria->addSelectColumn($alias . '.confirmity_weight');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }

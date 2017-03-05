@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Classes\operations\ActsConformityAnalyzer;
 use AppBundle\Model\Base\ActQuery;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,9 +33,13 @@ class ActsConformityAnalyzerCommand extends ContainerAwareCommand
 
         $output->writeln('Starting acts conformity analyze');
 
-        $analyzer = $this->getContainer()->get('legislation.acts_conformity_analyzer');
+        $analyzer = new ActsConformityAnalyzer($output);
         $analyzer
-            ->setActs(ActQuery::create()->find())
+            ->setActs(
+                ActQuery::create()
+//                    ->setLimit(10)
+                    ->find()
+            )
             ->analyze()
         ;
 

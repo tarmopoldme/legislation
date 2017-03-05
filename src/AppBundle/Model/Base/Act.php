@@ -109,6 +109,13 @@ abstract class Act implements ActiveRecordInterface
     protected $url;
 
     /**
+     * The value for the confirmity_weight field.
+     *
+     * @var        int
+     */
+    protected $confirmity_weight;
+
+    /**
      * The value for the created_at field.
      *
      * @var        DateTime
@@ -440,6 +447,16 @@ abstract class Act implements ActiveRecordInterface
     }
 
     /**
+     * Get the [confirmity_weight] column value.
+     *
+     * @return int
+     */
+    public function getConfirmityWeight()
+    {
+        return $this->confirmity_weight;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -600,6 +617,26 @@ abstract class Act implements ActiveRecordInterface
     } // setUrl()
 
     /**
+     * Set the value of [confirmity_weight] column.
+     *
+     * @param int $v new value
+     * @return $this|\AppBundle\Model\Act The current object (for fluent API support)
+     */
+    public function setConfirmityWeight($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->confirmity_weight !== $v) {
+            $this->confirmity_weight = $v;
+            $this->modifiedColumns[ActTableMap::COL_CONFIRMITY_WEIGHT] = true;
+        }
+
+        return $this;
+    } // setConfirmityWeight()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTimeInterface value.
@@ -693,13 +730,16 @@ abstract class Act implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : ActTableMap::translateFieldName('Url', TableMap::TYPE_PHPNAME, $indexType)];
             $this->url = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ActTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : ActTableMap::translateFieldName('ConfirmityWeight', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->confirmity_weight = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ActTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : ActTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : ActTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -712,7 +752,7 @@ abstract class Act implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = ActTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = ActTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\AppBundle\\Model\\Act'), 0, $e);
@@ -977,6 +1017,9 @@ abstract class Act implements ActiveRecordInterface
         if ($this->isColumnModified(ActTableMap::COL_URL)) {
             $modifiedColumns[':p' . $index++]  = 'url';
         }
+        if ($this->isColumnModified(ActTableMap::COL_CONFIRMITY_WEIGHT)) {
+            $modifiedColumns[':p' . $index++]  = 'confirmity_weight';
+        }
         if ($this->isColumnModified(ActTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'created_at';
         }
@@ -1011,6 +1054,9 @@ abstract class Act implements ActiveRecordInterface
                         break;
                     case 'url':
                         $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
+                        break;
+                    case 'confirmity_weight':
+                        $stmt->bindValue($identifier, $this->confirmity_weight, PDO::PARAM_INT);
                         break;
                     case 'created_at':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
@@ -1099,9 +1145,12 @@ abstract class Act implements ActiveRecordInterface
                 return $this->getUrl();
                 break;
             case 6:
-                return $this->getCreatedAt();
+                return $this->getConfirmityWeight();
                 break;
             case 7:
+                return $this->getCreatedAt();
+                break;
+            case 8:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1140,15 +1189,16 @@ abstract class Act implements ActiveRecordInterface
             $keys[3] => $this->getText(),
             $keys[4] => $this->getXml(),
             $keys[5] => $this->getUrl(),
-            $keys[6] => $this->getCreatedAt(),
-            $keys[7] => $this->getUpdatedAt(),
+            $keys[6] => $this->getConfirmityWeight(),
+            $keys[7] => $this->getCreatedAt(),
+            $keys[8] => $this->getUpdatedAt(),
         );
-        if ($result[$keys[6]] instanceof \DateTime) {
-            $result[$keys[6]] = $result[$keys[6]]->format('c');
-        }
-
         if ($result[$keys[7]] instanceof \DateTime) {
             $result[$keys[7]] = $result[$keys[7]]->format('c');
+        }
+
+        if ($result[$keys[8]] instanceof \DateTime) {
+            $result[$keys[8]] = $result[$keys[8]]->format('c');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1240,9 +1290,12 @@ abstract class Act implements ActiveRecordInterface
                 $this->setUrl($value);
                 break;
             case 6:
-                $this->setCreatedAt($value);
+                $this->setConfirmityWeight($value);
                 break;
             case 7:
+                $this->setCreatedAt($value);
+                break;
+            case 8:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1290,10 +1343,13 @@ abstract class Act implements ActiveRecordInterface
             $this->setUrl($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setCreatedAt($arr[$keys[6]]);
+            $this->setConfirmityWeight($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setUpdatedAt($arr[$keys[7]]);
+            $this->setCreatedAt($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setUpdatedAt($arr[$keys[8]]);
         }
     }
 
@@ -1353,6 +1409,9 @@ abstract class Act implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ActTableMap::COL_URL)) {
             $criteria->add(ActTableMap::COL_URL, $this->url);
+        }
+        if ($this->isColumnModified(ActTableMap::COL_CONFIRMITY_WEIGHT)) {
+            $criteria->add(ActTableMap::COL_CONFIRMITY_WEIGHT, $this->confirmity_weight);
         }
         if ($this->isColumnModified(ActTableMap::COL_CREATED_AT)) {
             $criteria->add(ActTableMap::COL_CREATED_AT, $this->created_at);
@@ -1451,6 +1510,7 @@ abstract class Act implements ActiveRecordInterface
         $copyObj->setText($this->getText());
         $copyObj->setXml($this->getXml());
         $copyObj->setUrl($this->getUrl());
+        $copyObj->setConfirmityWeight($this->getConfirmityWeight());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
 
@@ -1983,6 +2043,7 @@ abstract class Act implements ActiveRecordInterface
         $this->text = null;
         $this->xml = null;
         $this->url = null;
+        $this->confirmity_weight = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
