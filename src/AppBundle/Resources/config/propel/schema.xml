@@ -11,6 +11,7 @@
         <column name="url" type="varchar" size="255" />
         <column name="confirmity_weight" type="integer" required="false" />
         <column name="betweenness_weight" type="decimal" size="12" scale="7" required="false" />
+        <column name="combined_weight" type="decimal" size="12" scale="7" required="false" />
         <column name="created_at" type="timestamp" required="true" />
         <column name="updated_at" type="timestamp" />
 

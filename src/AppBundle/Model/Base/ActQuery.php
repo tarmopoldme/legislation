@@ -28,6 +28,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildActQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method     ChildActQuery orderByConfirmityWeight($order = Criteria::ASC) Order by the confirmity_weight column
  * @method     ChildActQuery orderByBetweennessWeight($order = Criteria::ASC) Order by the betweenness_weight column
+ * @method     ChildActQuery orderByCombinedWeight($order = Criteria::ASC) Order by the combined_weight column
  * @method     ChildActQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildActQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
@@ -39,6 +40,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildActQuery groupByUrl() Group by the url column
  * @method     ChildActQuery groupByConfirmityWeight() Group by the confirmity_weight column
  * @method     ChildActQuery groupByBetweennessWeight() Group by the betweenness_weight column
+ * @method     ChildActQuery groupByCombinedWeight() Group by the combined_weight column
  * @method     ChildActQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildActQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -83,6 +85,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAct findOneByUrl(string $url) Return the first ChildAct filtered by the url column
  * @method     ChildAct findOneByConfirmityWeight(int $confirmity_weight) Return the first ChildAct filtered by the confirmity_weight column
  * @method     ChildAct findOneByBetweennessWeight(string $betweenness_weight) Return the first ChildAct filtered by the betweenness_weight column
+ * @method     ChildAct findOneByCombinedWeight(string $combined_weight) Return the first ChildAct filtered by the combined_weight column
  * @method     ChildAct findOneByCreatedAt(string $created_at) Return the first ChildAct filtered by the created_at column
  * @method     ChildAct findOneByUpdatedAt(string $updated_at) Return the first ChildAct filtered by the updated_at column *
 
@@ -97,6 +100,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAct requireOneByUrl(string $url) Return the first ChildAct filtered by the url column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByConfirmityWeight(int $confirmity_weight) Return the first ChildAct filtered by the confirmity_weight column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByBetweennessWeight(string $betweenness_weight) Return the first ChildAct filtered by the betweenness_weight column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAct requireOneByCombinedWeight(string $combined_weight) Return the first ChildAct filtered by the combined_weight column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByCreatedAt(string $created_at) Return the first ChildAct filtered by the created_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAct requireOneByUpdatedAt(string $updated_at) Return the first ChildAct filtered by the updated_at column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -109,6 +113,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAct[]|ObjectCollection findByUrl(string $url) Return ChildAct objects filtered by the url column
  * @method     ChildAct[]|ObjectCollection findByConfirmityWeight(int $confirmity_weight) Return ChildAct objects filtered by the confirmity_weight column
  * @method     ChildAct[]|ObjectCollection findByBetweennessWeight(string $betweenness_weight) Return ChildAct objects filtered by the betweenness_weight column
+ * @method     ChildAct[]|ObjectCollection findByCombinedWeight(string $combined_weight) Return ChildAct objects filtered by the combined_weight column
  * @method     ChildAct[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildAct objects filtered by the created_at column
  * @method     ChildAct[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildAct objects filtered by the updated_at column
  * @method     ChildAct[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
@@ -209,7 +214,7 @@ abstract class ActQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, name, abbreviation, text, xml, url, confirmity_weight, betweenness_weight, created_at, updated_at FROM act WHERE id = :p0';
+        $sql = 'SELECT id, name, abbreviation, text, xml, url, confirmity_weight, betweenness_weight, combined_weight, created_at, updated_at FROM act WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -545,6 +550,47 @@ abstract class ActQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ActTableMap::COL_BETWEENNESS_WEIGHT, $betweennessWeight, $comparison);
+    }
+
+    /**
+     * Filter the query on the combined_weight column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCombinedWeight(1234); // WHERE combined_weight = 1234
+     * $query->filterByCombinedWeight(array(12, 34)); // WHERE combined_weight IN (12, 34)
+     * $query->filterByCombinedWeight(array('min' => 12)); // WHERE combined_weight > 12
+     * </code>
+     *
+     * @param     mixed $combinedWeight The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this|ChildActQuery The current query, for fluid interface
+     */
+    public function filterByCombinedWeight($combinedWeight = null, $comparison = null)
+    {
+        if (is_array($combinedWeight)) {
+            $useMinMax = false;
+            if (isset($combinedWeight['min'])) {
+                $this->addUsingAlias(ActTableMap::COL_COMBINED_WEIGHT, $combinedWeight['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($combinedWeight['max'])) {
+                $this->addUsingAlias(ActTableMap::COL_COMBINED_WEIGHT, $combinedWeight['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ActTableMap::COL_COMBINED_WEIGHT, $combinedWeight, $comparison);
     }
 
     /**
