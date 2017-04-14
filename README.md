@@ -11,8 +11,8 @@ Resources
 =========
 Development:
 
-* HTML skin: TODO
-* Demo environment: TODO
+* HTML skin: https://github.com/algolia/examples/tree/master/instant-search/instantsearch.js
+* Demo environment: http://tarmo.brainart.ee/legislation/web
 
 Setup instructions
 ==================
