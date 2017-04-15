@@ -1,5 +1,8 @@
 parameters:
     legislation.acts_listing_url: 'https://www.riigiteataja.ee/lyhendid.html'
+    legislation.algolia.app_id: QVD1349LIW
+    legislation.algolia.search_only_api_key: b5e923d3449e176b28be4ad44c6777fd
+    legislation.algolia.admin_api_key: 'Add this key to app main parameters.yml'
 services:
     legislation.api:
         class: AppBundle\Classes\api\ApiService
