@@ -1,9 +1,9 @@
 /* global instantsearch */
 
 app({
-    appId: 'latency',
-    apiKey: '6be0576ff61c053d5f9a3225e2a90f76',
-    indexName: 'instant_search'
+    appId: 'QVD1349LIW',
+    apiKey: 'b5e923d3449e176b28be4ad44c6777fd',
+    indexName: 'legislation'
 });
 
 function app(opts) {
@@ -14,12 +14,15 @@ function app(opts) {
         urlSync: true,
         searchFunction: function(helper) {
             var searchResults = $('.hit');
+            var pagination = $('#pagination')
             if (helper.state.query === '') {
                 searchResults.hide();
+                pagination.hide();
                 return;
             }
             helper.search();
             searchResults.show();
+            pagination.show();
         }
     });
 
@@ -41,12 +44,12 @@ function app(opts) {
         })
     );
 
-    // search.addWidget(
-    //     instantsearch.widgets.pagination({
-    //         container: '#pagination',
-    //         scrollTo: '#search-input'
-    //     })
-    // );
+    search.addWidget(
+        instantsearch.widgets.pagination({
+            container: '#pagination',
+            scrollTo: '#search-input'
+        })
+    );
     search.start();
 }
 

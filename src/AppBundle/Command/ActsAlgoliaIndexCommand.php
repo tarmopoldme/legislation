@@ -78,10 +78,6 @@ class ActsAlgoliaIndexCommand extends ContainerAwareCommand
             }
         }
 
-        $index->setSettings([
-            'attributeForDistinct' => 'name'
-        ]);
-
         $output->writeln('Acts indexing complete');
     }
 
@@ -119,7 +115,7 @@ class ActsAlgoliaIndexCommand extends ContainerAwareCommand
                     'name' => $act->getName(),
                     'text' => $text,
                     'url' => $act->getUrl(),
-                    'weight' => $act->getCombinedWeight()
+                    'weight' => (float)$act->getCombinedWeight()
                 ]);
             } catch (AlgoliaException $e) {
                 $output->writeln($e->getMessage());

@@ -33,6 +33,10 @@ header img {
     float: left;
     max-width: 23%;
 }
+#algolia-logo {
+    position: relative;
+    top: 3px;
+}
 #search-input input {
     font-size: 28px;
     font-weight: 100;
