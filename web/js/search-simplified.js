@@ -40,6 +40,20 @@ function app(opts) {
             templates: {
                 item: getTemplate('hit'),
                 empty: getTemplate('no-results')
+            },
+            transformData: {
+                item: function (data) {
+                    ['highlight', 'snippet'].forEach(function (type) {
+                        var group = data['_' + type + 'Result'];
+                        for (var attr in group) {
+                            if (!group.hasOwnProperty(attr)) continue;
+                            var elt = group[attr];
+                            elt.display = elt.matchLevel !== 'none';
+                        }
+                    });
+                    data.displaySpecial = false || data._snippetResult.text.display;
+                    return data;
+                }
             }
         })
     );

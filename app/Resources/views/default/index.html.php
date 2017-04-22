@@ -27,6 +27,12 @@ $assetsHelper = $view['assets'];
         <div class="hit-content">
             <h2 class="hit-name">{{{_highlightResult.name.value}}}</h2>
             <a target="_blank" href="{{url}}">{{url}}</a> <br />
+            {{#_snippetResult.text.display}}
+                <p>
+                    {{{_snippetResult.text.value}}}
+                </p>
+            {{/_snippetResult.text.display}}
+            <br/>
             <small>Weight: {{weight}}</small>
         </div>
     </div>
